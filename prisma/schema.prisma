@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id            String         @id @default(cuid())
+  azureTenantId String         @unique
+  displayName   String
+  createdAt     DateTime       @default(now())
+  subscriptions Subscription[]
+  users         User[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("viewer")
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Subscription {
+  id                  String           @id @default(cuid())
+  azureSubscriptionId String           @unique
+  displayName         String
+  state               String
+  tenantId            String
+  tenant              Tenant           @relation(fields: [tenantId], references: [id])
+  enabled             Boolean          @default(true)
+  resources           Resource[]
+  costRecords         CostRecord[]
+  findings            Finding[]
+  recommendations     Recommendation[]
+  healthEvents        HealthEvent[]
+  activityEvents      ActivityEvent[]
+  snapshots           DailySnapshot[]
+}
+
+model Resource {
+  id              String       @id @default(cuid())
+  azureResourceId String       @unique
+  name            String
+  type            String
+  resourceGroup   String
+  location        String
+  tags            String?
+  subscriptionId  String
+  subscription    Subscription @relation(fields: [subscriptionId], references: [id])
+  lastSyncedAt    DateTime
+}
+
+model CostRecord {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  date           DateTime
+  serviceName    String
+  resourceGroup  String?
+  cost           Float
+  currency       String       @default("USD")
+  ingestedAt     DateTime     @default(now())
+}
+
+model Finding {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  source         String
+  category       String
+  severity       String
+  title          String
+  description    String
+  resourceId     String?
+  evidence       String?
+  status         String       @default("active")
+  firstSeenAt    DateTime
+  lastSeenAt     DateTime
+}
+
+model Recommendation {
+  id               String       @id @default(cuid())
+  subscriptionId   String
+  subscription     Subscription @relation(fields: [subscriptionId], references: [id])
+  source           String
+  category         String
+  impact           String
+  title            String
+  description      String
+  evidence         String?
+  estimatedSavings Float?
+  resourceId       String?
+  ingestedAt       DateTime     @default(now())
+}
+
+model HealthEvent {
+  id               String       @id @default(cuid())
+  subscriptionId   String
+  subscription     Subscription @relation(fields: [subscriptionId], references: [id])
+  eventType        String
+  title            String
+  status           String
+  impactedServices String?
+  startTime        DateTime
+  endTime          DateTime?
+  lastUpdated      DateTime
+}
+
+model ActivityEvent {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  operationName  String
+  status         String
+  caller         String?
+  resourceId     String?
+  timestamp      DateTime
+  properties     String?
+}
+
+model DailySnapshot {
+  id               String       @id @default(cuid())
+  subscriptionId   String
+  subscription     Subscription @relation(fields: [subscriptionId], references: [id])
+  date             DateTime
+  secureScore      Float?
+  totalCost        Float?
+  resourceCount    Int?
+  criticalFindings Int?
+  alertCount       Int?
+  createdAt        DateTime     @default(now())
+
+  @@unique([subscriptionId, date])
+}
+
+model AgentRun {
+  id          String    @id @default(cuid())
+  agentType   String
+  status      String
+  input       String?
+  output      String?
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+}
