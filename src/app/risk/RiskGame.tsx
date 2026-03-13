@@ -37,6 +37,8 @@ const VC = {
 // SUB-COMPONENTS
 // ============================================================
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 function Avatar({ src, size = 40, border }: { src: string; size?: number; border: string }) {
   return (
     <div
@@ -49,7 +51,7 @@ function Avatar({ src, size = 40, border }: { src: string; size?: number; border
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" width={size} height={size} className="w-full h-full object-cover" />
+      <img src={`${basePath}${src}`} alt="" width={size} height={size} className="w-full h-full object-cover" />
     </div>
   );
 }

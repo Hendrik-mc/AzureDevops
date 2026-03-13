@@ -93,6 +93,7 @@ jobs:
 
           # Set base path for GitHub Pages
           export PAGES_BASE_PATH="/${{ github.event.repository.name }}"
+          export NEXT_PUBLIC_BASE_PATH="/${{ github.event.repository.name }}"
 
           # Build
           npx next build
