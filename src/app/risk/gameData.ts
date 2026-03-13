@@ -1,19 +1,20 @@
 import { Territory, Continent, Player } from './types';
 
 // Mission:Control team members - https://www.missioncontrol.io/team
+// Replace avatar files in /public/team/ with actual photos from the website
 export const MC_TEAM = [
-  { name: 'Hendrik V.I.', fullName: 'Hendrik Van Iterson', role: 'Founder & CEO', seed: 'HendrikVanIterson' },
-  { name: 'Daniel H.', fullName: 'Daniel Hendrikse', role: 'VP Partnerships', seed: 'DanielHendrikse' },
-  { name: 'Kingi K.', fullName: 'Kingi Kolczonay', role: 'Chief Product Officer', seed: 'KingiKolczonay' },
-  { name: 'Jeroen A.', fullName: 'Jeroen Albus', role: 'Head of Operations', seed: 'JeroenAlbus' },
-  { name: 'Dirk S.', fullName: 'Dirk Scholing', role: 'Chief Commercial Officer', seed: 'DirkScholing' },
-  { name: 'Jim T.', fullName: 'Jim Taylor', role: 'Creative Director', seed: 'JimTaylor' },
-  { name: 'Erwin v.D.', fullName: 'Erwin van Dijk', role: 'Lead QA', seed: 'ErwinVanDijk' },
-  { name: 'Mark d.V.', fullName: 'Mark de Vries', role: 'Head of Technology', seed: 'MarkDeVries' },
-  { name: 'Koen v.d.M.', fullName: 'Koen van der Meer', role: 'Sr. Software Engineer', seed: 'KoenVanDerMeer' },
-  { name: 'Bart v.d.D.', fullName: 'Bart van der Drift', role: 'Data AI Architect', seed: 'BartVanDerDrift' },
-  { name: 'Wim G.', fullName: 'Wim Groenendijk', role: 'Lead UX', seed: 'WimGroenendijk' },
-  { name: 'Jean-Paul K.', fullName: 'Jean-Paul Kommers', role: 'Sr. Software Engineer', seed: 'JeanPaulKommers' },
+  { name: 'Hendrik V.I.', fullName: 'Hendrik Van Iterson', role: 'Founder & CEO', avatar: '/team/hendrik-van-iterson.svg' },
+  { name: 'Daniel H.', fullName: 'Daniel Hendrikse', role: 'VP Partnerships', avatar: '/team/daniel-hendrikse.svg' },
+  { name: 'Kingi K.', fullName: 'Kingi Kolczonay', role: 'Chief Product Officer', avatar: '/team/kingi-kolczonay.svg' },
+  { name: 'Jeroen A.', fullName: 'Jeroen Albus', role: 'Head of Operations', avatar: '/team/jeroen-albus.svg' },
+  { name: 'Dirk S.', fullName: 'Dirk Scholing', role: 'Chief Commercial Officer', avatar: '/team/dirk-scholing.svg' },
+  { name: 'Jim T.', fullName: 'Jim Taylor', role: 'Creative Director', avatar: '/team/jim-taylor.svg' },
+  { name: 'Erwin v.D.', fullName: 'Erwin van Dijk', role: 'Lead QA', avatar: '/team/erwin-van-dijk.svg' },
+  { name: 'Mark d.V.', fullName: 'Mark de Vries', role: 'Head of Technology', avatar: '/team/mark-de-vries.svg' },
+  { name: 'Koen v.d.M.', fullName: 'Koen van der Meer', role: 'Sr. Software Engineer', avatar: '/team/koen-van-der-meer.svg' },
+  { name: 'Bart v.d.D.', fullName: 'Bart van der Drift', role: 'Data AI Architect', avatar: '/team/bart-van-der-drift.svg' },
+  { name: 'Wim G.', fullName: 'Wim Groenendijk', role: 'Lead UX', avatar: '/team/wim-groenendijk.svg' },
+  { name: 'Jean-Paul K.', fullName: 'Jean-Paul Kommers', role: 'Sr. Software Engineer', avatar: '/team/jean-paul-kommers.svg' },
 ];
 
 const PLAYER_COLORS = [
@@ -34,7 +35,7 @@ export function createPlayers(selectedIndices: number[]): Player[] {
       name: member.name,
       role: member.role,
       ...colors,
-      avatar: `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(member.fullName)}&backgroundColor=${colors.color.slice(1)}&textColor=ffffff&fontSize=36`,
+      avatar: member.avatar,
       isAI: i > 0, // first player is human by default
       territories: 0,
       troops: 0,
