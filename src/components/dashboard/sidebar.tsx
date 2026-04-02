@@ -11,6 +11,7 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
+  ShoppingBag,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -22,6 +23,7 @@ const navItems = [
   { href: "/reliability", label: "Reliability", icon: Activity },
   { href: "/inventory", label: "Inventory", icon: Package },
   { href: "/reports", label: "Reports", icon: FileText },
+  { href: "/shopify", label: "Shopify", icon: ShoppingBag },
 ];
 
 export function Sidebar() {
@@ -49,7 +51,7 @@ export function Sidebar() {
 
       <nav className="flex-1 p-2 space-y-1">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link
               key={item.href}

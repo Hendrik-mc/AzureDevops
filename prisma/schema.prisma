@@ -148,3 +148,71 @@ model AgentRun {
   startedAt   DateTime  @default(now())
   completedAt DateTime?
 }
+
+// ============================================================
+// Shopify Plugin Models
+// ============================================================
+
+model ShopifyStore {
+  id          String               @id @default(cuid())
+  shopDomain  String               @unique
+  accessToken String
+  scopes      String
+  installedAt DateTime             @default(now())
+  isActive    Boolean              @default(true)
+  config      ShopifyPluginConfig?
+  productMaps ShopifyProductMap[]
+  orderMaps   ShopifyOrderMap[]
+  syncLogs    ShopifySyncLog[]
+}
+
+model ShopifyPluginConfig {
+  id               String       @id @default(cuid())
+  storeId          String       @unique
+  store            ShopifyStore @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  mcPartnerId      String
+  mcEnvironment    String       @default("sandbox")
+  autoSync         Boolean      @default(false)
+  syncIntervalMins Int          @default(60)
+  defaultMarkup    Float        @default(0)
+  regionId         String?
+  updatedAt        DateTime     @updatedAt
+}
+
+model ShopifyProductMap {
+  id               String       @id @default(cuid())
+  storeId          String
+  store            ShopifyStore @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  mcProductId      String
+  shopifyProductId String
+  shopifyVariantId String?
+  lastSyncedAt     DateTime
+  isActive         Boolean      @default(true)
+
+  @@unique([storeId, mcProductId])
+}
+
+model ShopifyOrderMap {
+  id               String       @id @default(cuid())
+  storeId          String
+  store            ShopifyStore @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  shopifyOrderId   String
+  mcReservationId  String?
+  mcOrderId        String?
+  status           String       @default("pending")
+  partnerReference String       @unique
+  errorMessage     String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+model ShopifySyncLog {
+  id        String   @id @default(cuid())
+  storeId   String
+  store     ShopifyStore @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  type      String
+  status    String
+  details   String?
+  itemCount Int      @default(0)
+  createdAt DateTime @default(now())
+}
